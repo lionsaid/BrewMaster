@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Sales by Product YTD Allocation",
+    "image": "https://uat-cbcgroup.pharmbrain.com/dashboard/portfolio/operations?field=Pharma&company=Hasten#state=38dc6fdb-6f86-4e01-a021-c850ec300b3d&session_state=ee25420f-6e80-486b-ab89-019cb93776f8&iss=https://uat.pharmbrain.com/auth/realms/cbcgroup&code=c7e8bc23-8008-4afc-9c0a-db6d961acb07.ee25420f-6e80-486b-ab89-019cb93776f8.abc50a08-80ab-4b26-ab1f-8e041a618097",
+    "data": [
+      {
+        "actualFy": 61.6777165,
+        "actualMtd": 13.89564789,
+        "actualYtd": 34.18323687,
+        "category": "Sales by Product",
+        "companyName": "Hasten",
+        "id": "058f5bb9-69c9-4cd9-b28e-62ff95e09baa",
+        "menu": "Pharma",
+        "monthId": 1743436800000,
+        "product": "Edarbi",
+        "unit": "M RMB",
+        "ytdAch": 0.10027436090651097
+      },
+      {
+        "actualFy": 221.92748274000002,
+        "actualMtd": 63.40384527000001,
+        "actualYtd": 137.41290065,
+        "category": "Sales by Product",
+        "companyName": "Hasten",
+        "id": "5b0288d5-418a-4e65-a935-d98b1aa37f81",
+        "menu": "Pharma",
+        "monthId": 1743436800000,
+        "product": "Paradise",
+        "unit": "M RMB",
+        "ytdAch": 0.4030920431962193
+      }
+    ]
+  }
+]
