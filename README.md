@@ -22,7 +22,7 @@
 
 文件校验（可选）：
 ```bash
-shasum -a 256 dmg/BrewMaster-universal.dmg
+shasum -a 256 dist/BrewMaster-universal.dmg
 # 期望值：
 # f901294104010789e925b5a9a9239424fad4d734e97f8901c6963f1a6f993a6c
 ```

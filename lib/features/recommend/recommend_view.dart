@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:brew_master/core/services/brew_service.dart';
+import 'package:brew_master/features/recommend/recommend_repository.dart';
 import 'package:brew_master/core/widgets/app_card.dart';
 import 'package:brew_master/core/widgets/gradient_button.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,8 @@ class _RecommendViewState extends State<RecommendView> {
   static const String _featuredUrl = 'https://lionsaid-1305508138.cos.ap-beijing.myqcloud.com/brew_master/recommend/featured.json';
   late final PageController _pageController;
   double _page = 0;
+  bool _paused = false;
+  final RecommendRepository _repo = RecommendRepository();
 
   @override
   void initState() {
@@ -57,32 +60,36 @@ class _RecommendViewState extends State<RecommendView> {
       _loadRecommendations(),
       _loadFeatured(),
     ]);
+    if (!mounted) return;
     _startFeaturedAutoSwitch();
   }
 
   Future<void> _loadRecommendations() async {
     try {
-      final http.Response response = await http.get(Uri.parse(_recommendUrl)).timeout(const Duration(seconds: 12));
-      if (response.statusCode != 200) {
-        throw Exception('HTTP ${response.statusCode}');
-      }
-      final Map<String, dynamic> jsonMap = json.decode(response.body) as Map<String, dynamic>;
+      final String? body = await _repo.getJsonWithCache(_recommendUrl, timeout: const Duration(seconds: 12));
+      if (body == null) throw Exception('no data');
+      if (!mounted) return;
+      final Map<String, dynamic> jsonMap = json.decode(body) as Map<String, dynamic>;
       final List<dynamic> sectionsJson = (jsonMap['sections'] as List<dynamic>? ?? <dynamic>[]);
       final List<_Section> sections = sectionsJson
           .map((dynamic item) => _Section.fromJson(item as Map<String, dynamic>))
           .toList(growable: false);
+      if (!mounted) return;
       setState(() { _sections = sections; _isLoading = false; _loadError = null; });
     } catch (e) {
       // 回退到本地资源，保证在离线或网络异常时仍可用
       try {
         final String jsonString = await rootBundle.loadString('assets/data/recommendations.json');
+        if (!mounted) return;
         final Map<String, dynamic> jsonMap = json.decode(jsonString) as Map<String, dynamic>;
         final List<dynamic> sectionsJson = (jsonMap['sections'] as List<dynamic>? ?? <dynamic>[]);
         final List<_Section> sections = sectionsJson
             .map((dynamic item) => _Section.fromJson(item as Map<String, dynamic>))
             .toList(growable: false);
+        if (!mounted) return;
         setState(() { _sections = sections; _isLoading = false; _loadError = null; });
       } catch (_) {
+        if (!mounted) return;
         setState(() { _isLoading = false; _loadError = '加载推荐数据失败'; });
       }
     }
@@ -90,9 +97,10 @@ class _RecommendViewState extends State<RecommendView> {
 
   Future<void> _loadFeatured() async {
     try {
-      final http.Response response = await http.get(Uri.parse(_featuredUrl)).timeout(const Duration(seconds: 10));
-      if (response.statusCode != 200) throw Exception('HTTP ${response.statusCode}');
-      final Map<String, dynamic> jsonMap = json.decode(response.body) as Map<String, dynamic>;
+      final String? body = await _repo.getJsonWithCache(_featuredUrl, timeout: const Duration(seconds: 10));
+      if (body == null) throw Exception('no data');
+      if (!mounted) return;
+      final Map<String, dynamic> jsonMap = json.decode(body) as Map<String, dynamic>;
       final List<dynamic> appsJson = (jsonMap['apps'] as List<dynamic>? ?? <dynamic>[]);
       _featured
         ..clear()
@@ -100,6 +108,7 @@ class _RecommendViewState extends State<RecommendView> {
     } catch (_) {
       try {
         final String jsonString = await rootBundle.loadString('assets/data/featured.json');
+        if (!mounted) return;
         final Map<String, dynamic> jsonMap = json.decode(jsonString) as Map<String, dynamic>;
         final List<dynamic> appsJson = (jsonMap['apps'] as List<dynamic>? ?? <dynamic>[]);
         _featured
@@ -135,10 +144,22 @@ class _RecommendViewState extends State<RecommendView> {
       return const Center(child: CircularProgressIndicator());
     }
     if (_loadError != null) {
-      return Center(child: Text(_loadError!));
+      return Center(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Text(_loadError!),
+          const SizedBox(height: 12),
+          ElevatedButton(onPressed: () { setState(() { _isLoading = true; _loadError = null; }); _loadAll(); }, child: const Text('重试')),
+        ]),
+      );
     }
-    if (_sections.isEmpty || _sections.first.apps.isEmpty) {
-      return const Center(child: Text('暂无推荐数据'));
+    if (_featured.isEmpty && (_sections.isEmpty || _sections.first.apps.isEmpty)) {
+      return Center(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const Text('暂无推荐数据'),
+          const SizedBox(height: 12),
+          ElevatedButton(onPressed: () { setState(() { _isLoading = true; }); _loadAll(); }, child: const Text('刷新')),
+        ]),
+      );
     }
     final _App heroApp = (_featured.isNotEmpty)
         ? _featured[_currentFeaturedIndex % _featured.length]
@@ -173,9 +194,17 @@ class _RecommendViewState extends State<RecommendView> {
         ? _featured
         : (_sections.isNotEmpty ? _sections.first.apps.take(3).toList(growable: false) : <_App>[]);
     if (items.isEmpty) return const SizedBox.shrink();
-    return _NeonBorder(
+    final bool reduce = MediaQuery.of(context).disableAnimations;
+    return MouseRegion(
+      onEnter: (_) => setState(() => _paused = true),
+      onExit: (_) => setState(() => _paused = false),
+      child: GestureDetector(
+        onPanDown: (_) => setState(() => _paused = true),
+        onPanEnd: (_) => setState(() => _paused = false),
+        child: _NeonBorder(
       radius: 16,
       width: 2.5,
+      reduceMotion: reduce,
       child: FrostCard(
         child: Padding(
         padding: const EdgeInsets.all(16),
@@ -230,7 +259,8 @@ class _RecommendViewState extends State<RecommendView> {
         ),
       ),
       ),
-    );
+      ),
+    ));
   }
 
   Widget _heroSlide(_App app, {Key? key}) {
@@ -409,7 +439,8 @@ class _NeonBorder extends StatefulWidget {
   final Widget child;
   final double radius;
   final double width;
-  const _NeonBorder({required this.child, this.radius = 16, this.width = 2.5});
+  final bool reduceMotion;
+  const _NeonBorder({required this.child, this.radius = 16, this.width = 2.5, this.reduceMotion = false});
   @override
   State<_NeonBorder> createState() => _NeonBorderState();
 }
@@ -438,7 +469,7 @@ class _NeonBorderState extends State<_NeonBorder> with SingleTickerProviderState
       Color(0xFF9A7DFF), // purple
       Color(0xFFFF6B6B), // red back to start for smooth loop
     ];
-    return AnimatedBuilder(
+    final Widget content = AnimatedBuilder(
       animation: _controller,
       builder: (_, __) {
         final double angle = _controller.value * 2 * math.pi;
@@ -464,6 +495,14 @@ class _NeonBorderState extends State<_NeonBorder> with SingleTickerProviderState
         );
       },
     );
+    return RepaintBoundary(child: widget.reduceMotion ? Container(
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
+        gradient: LinearGradient(colors: const [Color(0xFF9A7DFF), Color(0xFF3E8EED)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+      ),
+      padding: EdgeInsets.all(borderWidth),
+      child: ClipRRect(borderRadius: BorderRadius.circular(radius - borderWidth), child: widget.child),
+    ) : content);
   }
 }
 
