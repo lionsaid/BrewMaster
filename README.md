@@ -10,9 +10,60 @@
 
 ---
 
-## 预览
+## 下载与安装
 
-将你的截图放到 `docs/screenshots/` 目录，并替换下方文件名。
+- 直接下载： [BrewMaster-universal.dmg](dist/BrewMaster-universal.dmg)（约 21 MB，Apple Silicon 与 Intel 双架构）
+- 系统要求：macOS 13+（建议），需已安装 Homebrew
+
+安装步骤：
+1. 双击打开 DMG
+2. 将 BrewMaster 拖拽到「应用程序」
+3. 若首次启动被阻止，右键图标选择「打开」即可
+
+文件校验（可选）：
+```bash
+shasum -a 256 dmg/BrewMaster-universal.dmg
+# 期望值：
+# f901294104010789e925b5a9a9239424fad4d734e97f8901c6963f1a6f993a6c
+```
+
+### 未安装 Homebrew？
+
+- 官方安装命令：
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+- 安装完成后（初始化环境）：
+  - Apple Silicon（M1/M2/M3）：
+  ```bash
+  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  ```
+  - Intel x86：
+  ```bash
+  echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
+  eval "$(/usr/local/bin/brew shellenv)"
+  ```
+
+- 验证安装：
+```bash
+brew --version
+brew doctor
+```
+
+- 如提示缺少 Xcode Command Line Tools：
+```bash
+xcode-select --install
+```
+
+- 参考： [Homebrew 官网安装指南](https://brew.sh)
+
+完成以上步骤后，重新打开 BrewMaster，确保 `brew` 已在 `PATH` 中即可正常使用。
+
+---
+
+## 预览
 
 - 仪表盘（Dashboard）  
   ![Dashboard](docs/screenshots/dashboard.png)
