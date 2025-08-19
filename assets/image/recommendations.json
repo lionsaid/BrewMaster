@@ -1,0 +1,55 @@
+{
+  "sections": [
+    {
+      "title": "开发者必备",
+      "apps": [
+        { "name": "iterm2", "homepage": "https://iterm2.com", "isCask": true, "tags": ["终端", "开发者"] },
+        { "name": "visual-studio-code", "homepage": "https://code.visualstudio.com", "isCask": true, "tags": ["IDE", "编辑器"] },
+        { "name": "oh-my-zsh", "homepage": "https://ohmyz.sh", "isCask": false, "tags": ["shell", "插件"] },
+        { "name": "docker", "homepage": "https://www.docker.com", "isCask": true, "tags": ["容器", "虚拟化"] },
+        { "name": "postman", "homepage": "https://www.postman.com", "isCask": true, "tags": ["API", "调试"] },
+        { "name": "sourcetree", "homepage": "https://www.sourcetreeapp.com", "isCask": true, "tags": ["Git", "GUI"] }
+      ]
+    },
+    {
+      "title": "系统增强工具",
+      "apps": [
+        { "name": "rectangle", "homepage": "https://rectangleapp.com", "isCask": true, "tags": ["窗口管理"] },
+        { "name": "the-unarchiver", "homepage": "https://theunarchiver.com", "isCask": true, "tags": ["解压"] },
+        { "name": "stats", "homepage": "https://github.com/exelban/stats", "isCask": true, "tags": ["系统监控"] },
+        { "name": "alfred", "homepage": "https://www.alfredapp.com", "isCask": true, "tags": ["启动器", "效率"] },
+        { "name": "bartender", "homepage": "https://www.macbartender.com", "isCask": true, "tags": ["菜单栏管理"] },
+        { "name": "iina", "homepage": "https://iina.io", "isCask": true, "tags": ["视频播放器"] }
+      ]
+    },
+    {
+      "title": "设计与创意",
+      "apps": [
+        { "name": "figma", "homepage": "https://www.figma.com", "isCask": true, "tags": ["设计"] },
+        { "name": "imageoptim", "homepage": "https://imageoptim.com", "isCask": true, "tags": ["图片优化"] },
+        { "name": "handbrake", "homepage": "https://handbrake.fr", "isCask": true, "tags": ["视频转码"] },
+        { "name": "obsidian", "homepage": "https://obsidian.md", "isCask": true, "tags": ["笔记", "知识管理"] },
+        { "name": "xnviewmp", "homepage": "https://www.xnview.com/en/xnviewmp/", "isCask": true, "tags": ["看图", "图片管理"] },
+        { "name": "kap", "homepage": "https://getkap.co", "isCask": true, "tags": ["录屏", "GIF"] }
+      ]
+    },
+    {
+      "title": "效率与办公",
+      "apps": [
+        { "name": "notion", "homepage": "https://www.notion.so", "isCask": true, "tags": ["笔记", "协作"] },
+        { "name": "raycast", "homepage": "https://www.raycast.com", "isCask": true, "tags": ["启动器", "效率"] },
+        { "name": "bob", "homepage": "https://github.com/ripperhe/Bob", "isCask": true, "tags": ["翻译", "OCR"] },
+        { "name": "shottr", "homepage": "https://shottr.cc", "isCask": true, "tags": ["截图", "标注"] }
+      ]
+    },
+    {
+      "title": "网络与通讯",
+      "apps": [
+        { "name": "google-chrome", "homepage": "https://www.google.com/chrome", "isCask": true, "tags": ["浏览器"] },
+        { "name": "telegram", "homepage": "https://telegram.org", "isCask": true, "tags": ["即时通讯"] },
+        { "name": "discord", "homepage": "https://discord.com", "isCask": true, "tags": ["社区", "语音"] },
+        { "name": "tailscale", "homepage": "https://tailscale.com", "isCask": true, "tags": ["VPN", "网络"] }
+      ]
+    }
+  ]
+}
