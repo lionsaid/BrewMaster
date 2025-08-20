@@ -209,4 +209,5 @@ flutter build macos
 
 ## 许可
 
-MIT License（可按需要修改）。
+GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007
+[LICENSE](LICENSE))
