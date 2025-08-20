@@ -41,7 +41,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future<void> _check() async {
-    setState(() { _diagnostic = '正在检测 Homebrew…'; });
+            setState(() { _diagnostic = 'Detecting Homebrew...'; });
     await _probe();
     final ok = await _brewService.isBrewInstalled();
     if (!mounted) return;
@@ -52,7 +52,7 @@ class _SplashViewState extends State<SplashView> {
     } else {
       setState(() {
         _installed = false;
-        _diagnostic = '未检测到可执行的 brew，请确认 /opt/homebrew/bin/brew 或 /usr/local/bin/brew 可用，或手动指定路径后重试。';
+        _diagnostic = 'No executable brew detected, please confirm /opt/homebrew/bin/brew or /usr/local/bin/brew is available, or manually specify path and retry.';
       });
     }
   }
@@ -136,7 +136,7 @@ class _SplashViewState extends State<SplashView> {
                                     return ListTile(
                                       dense: true,
                                       leading: Icon(ok ? Icons.check_circle : Icons.error_outline, color: ok ? Colors.green : Colors.orange),
-                                      title: Text(path.isEmpty ? '(空路径)' : path),
+                                      title: Text(path.isEmpty ? '(empty path)' : path),
                                       subtitle: Text('exit=$exit • ${out.split('\n').first}', maxLines: 1, overflow: TextOverflow.ellipsis),
                                     );
                                   },

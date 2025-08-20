@@ -41,7 +41,7 @@ class DashboardViewState extends State<DashboardView> {
   void initState() { super.initState(); _load(); }
 
   Future<void> _load() async {
-    // 并发拉取，各自就绪各自刷新
+    // Concurrent fetch, each ready each refresh
     _brew.countInstalledFormulae().then((v){ if(mounted) setState(()=>_formulae=v); });
     _brew.countInstalledCasks().then((v){ if(mounted) setState(()=>_casks=v); });
     _brew.countTaps().then((v){ if(mounted) setState(()=>_taps=v); });
@@ -63,7 +63,7 @@ class DashboardViewState extends State<DashboardView> {
     }
   }
 
-  String get _username => Platform.environment['USER'] ?? '朋友';
+  String get _username => Platform.environment['USER'] ?? 'friend';
 
   void _goInstalled(BuildContext context, {String filter = 'all'}) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomeView(initialIndex: 1, packagesInitialFilter: filter)));

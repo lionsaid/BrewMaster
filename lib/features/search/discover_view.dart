@@ -46,11 +46,11 @@ class _DiscoverViewState extends State<DiscoverView> {
     }
     setState(() { _searching = true; _error = ''; _results = []; _names = []; });
     try {
-      // 先拿名字（快）
+              // First get names (fast)
       final names = await _brew.searchNames(query, limit: 40);
       if (!mounted) return;
       setState(() => _names = names);
-      // 再分批拉 info（懒加载）
+              // Then batch pull info (lazy loading)
       const batch = 10;
       for (var i = 0; i < names.length; i += batch) {
         final slice = names.sublist(i, (i + batch).clamp(0, names.length));
@@ -92,7 +92,7 @@ class _DiscoverViewState extends State<DiscoverView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 搜索框（磨砂材质，与卡片统一）
+          // Search box (frosted material, unified with cards)
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: BackdropFilter(

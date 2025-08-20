@@ -59,7 +59,7 @@ class _PackageDetailViewState extends State<PackageDetailView> with TickerProvid
       if (!widget.package.isCask) {
         Future.microtask(_loadAlternatives);
       }
-      // 关键：包变化时重新加载依赖
+      // Key: reload dependencies when package changes
       _dependenciesFuture = null;
       _loadDependencies();
       setState(() {});
@@ -73,7 +73,7 @@ class _PackageDetailViewState extends State<PackageDetailView> with TickerProvid
     if (_tabController.index == 2 && _versionedAlternatives == null && !_loadingAlternatives && !widget.package.isCask) {
       _loadAlternatives();
     }
-    // 进入依赖关系页（索引3）时，若未加载则加载
+            // When entering dependency page (index 3), load if not loaded
     if (_tabController.index == 3 && _dependenciesFuture == null) {
       _loadDependencies();
     }
@@ -292,7 +292,7 @@ class _PackageDetailViewState extends State<PackageDetailView> with TickerProvid
           const SizedBox(height: 8),
           Row(
             children: [
-              Expanded(child: TextField(controller: controller, decoration: const InputDecoration(hintText: '例如 2.41 或 2.41.0'))),
+              Expanded(child: TextField(controller: controller, decoration: const InputDecoration(hintText: 'e.g. 2.41 or 2.41.0'))),
               const SizedBox(width: 8),
               ActionButton(
                 onPressed: _installing ? null : () => _extractAndInstallVersion(controller.text.trim()), 

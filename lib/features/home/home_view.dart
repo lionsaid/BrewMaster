@@ -52,7 +52,7 @@ class _HomeViewState extends State<HomeView> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             final width = constraints.maxWidth;
-            final wide = width >= 960; // 更宽时显示标签
+            final wide = width >= 960; // Show labels when wider
             final tint = Theme.of(context).brightness == Brightness.dark
                 ? Colors.black.withOpacity(0.28)
                 : Colors.white.withOpacity(0.38);
@@ -71,14 +71,14 @@ class _HomeViewState extends State<HomeView> {
                     child: Stack(
                       children: [
                         NavigationRail(
-                        // 更宽时扩展为带文字；窄时仅图标
+                        // Expand to with text when wider; icon only when narrow
                         extended: wide,
                         backgroundColor: Colors.transparent,
                         minExtendedWidth: wide ? 220 : 180,
                         selectedIndex: _index,
                         onDestinationSelected: _onTabChanged,
                         labelType: wide ? NavigationRailLabelType.none : NavigationRailLabelType.selected,
-                        // 选中 pill 指示器
+                        // Selected pill indicator
                         indicatorColor: brand.withOpacity(0.14),
                         indicatorShape: const StadiumBorder(),
                           destinations: [

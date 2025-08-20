@@ -63,7 +63,7 @@ class _CleanupViewState extends State<CleanupView> {
       final sizeMatch = RegExp(r'(\d+(?:\.\d+)?\s*(?:B|KB|MB|GB|TB))', caseSensitive: false).firstMatch(line);
       final size = sizeMatch?.group(1) ?? '';
       final lower = line.toLowerCase();
-      // 更宽松的分类规则
+      // More lenient classification rules
       final isCache = lower.contains('cache') || lower.contains('caches/homebrew') || lower.contains('/downloads/');
       final isUnlinked = lower.contains('unlinked') || lower.contains('pruned');
       final isOutdated = lower.contains('would remove') || lower.contains('/cellar/') || lower.contains('/caskroom/') || lower.contains('old versions') || lower.contains('outdated');
@@ -78,15 +78,15 @@ class _CleanupViewState extends State<CleanupView> {
     }
 
     String _summary(List<_Item> items) {
-      if (items.isEmpty) return '0 项';
+      if (items.isEmpty) return '0 items';
       final total = items.fold<double>(0, (p, e) => p + _parseSizeToBytes(e.size));
-      return '${items.length} 项 · ${total > 0 ? _bytesToHuman(total) : '—'}';
+              return '${items.length} items · ${total > 0 ? _bytesToHuman(total) : '—'}';
     }
 
     _groups.addAll([
-      _Group(title: '缓存的下载文件', sizeText: _summary(cacheItems), items: cacheItems),
-      _Group(title: '过时的软件包', sizeText: _summary(outdated), items: outdated),
-      _Group(title: '未链接的旧版本', sizeText: _summary(unlinked), items: unlinked),
+              _Group(title: 'Cached downloads', sizeText: _summary(cacheItems), items: cacheItems),
+        _Group(title: 'Outdated packages', sizeText: _summary(outdated), items: outdated),
+        _Group(title: 'Unlinked old versions', sizeText: _summary(unlinked), items: unlinked),
     ]);
 
     for (final g in _groups) {

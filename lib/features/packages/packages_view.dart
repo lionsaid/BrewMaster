@@ -269,11 +269,11 @@ class _PackagesViewState extends State<PackagesView> {
                         // If current selected item is different from clicked item, update selected item and clear batch selection
                         if (_selectedPackage?.name != package.name) {
                           _selectedPackage = package;
-                          _selectedNames.clear(); // 清空批量选择，避免混淆
+                                                      _selectedNames.clear(); // Clear batch selection to avoid confusion
                         } else {
-                          _selectedPackage = null; // 再次点击取消选中
+                                                      _selectedPackage = null; // Click again to deselect
                         }
-                        // 批量选择逻辑，与单选互斥
+                                                  // Batch selection logic, mutually exclusive with single selection
                         if (checked) {
                           _selectedNames.remove(package.name);
                         } else {
@@ -345,7 +345,7 @@ class _PackagesViewState extends State<PackagesView> {
                     ],
                   );
                 } else {
-                  // 自适应的详情面板宽度：占用可用宽度的 ~56%，并限制在 560-900 之间
+                  // Adaptive detail panel width: occupies ~56% of available width, limited between 560-900
                   final target = constraints.maxWidth * 0.56;
                   final detailWidth = target.clamp(560.0, 900.0) as double;
                   return Row( // Place panes side-by-side

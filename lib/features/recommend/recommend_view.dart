@@ -78,7 +78,7 @@ class _RecommendViewState extends State<RecommendView> {
       if (!mounted) return;
       setState(() { _sections = sections; _isLoading = false; _loadError = null; });
     } catch (e) {
-      // 回退到本地资源，保证在离线或网络异常时仍可用
+              // Fallback to local resources, ensuring availability when offline or network issues
       try {
         final String jsonString = await rootBundle.loadString('assets/data/recommendations.json');
         if (!mounted) return;
@@ -91,7 +91,7 @@ class _RecommendViewState extends State<RecommendView> {
         setState(() { _sections = sections; _isLoading = false; _loadError = null; });
       } catch (_) {
         if (!mounted) return;
-        setState(() { _isLoading = false; _loadError = '加载推荐数据失败'; });
+        setState(() { _isLoading = false; _loadError = 'Failed to load recommendation data'; });
       }
     }
   }
@@ -221,7 +221,7 @@ class _RecommendViewState extends State<RecommendView> {
                 final double delta = (index - _page).toDouble();
                 final double scale = (1 - (delta.abs() * 0.06)).clamp(0.9, 1.0);
                 final double opacity = (1 - delta.abs() * 0.3).clamp(0.3, 1.0);
-                final double translateX = -delta * 24; // 左滑视差
+                final double translateX = -delta * 24; // Left slide parallax
                 return AnimatedOpacity(
                   duration: const Duration(milliseconds: 280),
                   opacity: opacity,
@@ -422,7 +422,7 @@ class _RecommendViewState extends State<RecommendView> {
     Future.delayed(const Duration(seconds: 2), () => entry.remove());
   }
 
-  // 彩虹霓虹边框容器
+          // Rainbow neon border container
 }
 
 class _NeonBorder extends StatefulWidget {
@@ -521,16 +521,16 @@ class _App {
   }
   String get displayName => name.replaceAll('-', ' ');
   String get slogan => switch (name) {
-    'iterm2' => '最好的终端替代品，功能强大',
-    'visual-studio-code' => '流行的跨平台 IDE/编辑器',
-    'oh-my-zsh' => '强大的 zsh 框架与插件生态',
-    'rectangle' => '窗口分屏与管理',
-    'the-unarchiver' => '更强的压缩与解压',
-    'stats' => '漂亮的系统状态监控',
-    'figma' => '协作式 UI/UX 设计',
-    'imageoptim' => '图像无损/有损压缩',
-    'handbrake' => '跨平台视频转码器',
-    _ => '实用工具',
+            'iterm2' => 'Best terminal alternative, powerful features',
+        'visual-studio-code' => 'Popular cross-platform IDE/editor',
+          'oh-my-zsh' => 'Powerful zsh framework with plugin ecosystem',
+      'rectangle' => 'Window splitting and management',
+      'the-unarchiver' => 'Enhanced compression and decompression',
+      'stats' => 'Beautiful system status monitoring',
+      'figma' => 'Collaborative UI/UX design',
+      'imageoptim' => 'Image lossless/lossy compression',
+      'handbrake' => 'Cross-platform video transcoder',
+      _ => 'Utility tool',
   };
 } 
 
