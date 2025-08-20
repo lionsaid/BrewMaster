@@ -1,12 +1,16 @@
 # BrewMaster
+<div style="display: flex; justify-content: space-around;">
 <img src="docs/screenshots/dashboard.png" width="200">
 <img src="docs/screenshots/cleanup.png" width="200"> 
 <img src="docs/screenshots/discover.png" width="200">
 <img src="docs/screenshots/health.png" width="200">
+</div>
+<div style="display: flex; justify-content: space-around;">
 <img src="docs/screenshots/installed.png" width="200">
 <img src="docs/screenshots/recommended.png" width="200">
 <img src="docs/screenshots/services.png" width="200">
 <img src="docs/screenshots/updates.png" width="200">
+</div>
 
 一款优雅、强大的 Homebrew 图形化客户端（Flutter Desktop）。
 
