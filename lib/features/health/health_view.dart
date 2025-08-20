@@ -13,7 +13,7 @@ class HealthView extends StatefulWidget {
 
 class _HealthViewState extends State<HealthView> {
   final BrewService _brew = BrewService();
-  bool _loading = false; // we将用逐项加载动画，整体不再白屏
+  bool _loading = false; // We will use item-by-item loading animation, no more white screen
   final List<_HealthItem> _items = [];
   final List<String> _logs = [];
   final ScrollController _logScroll = ScrollController();
@@ -22,7 +22,7 @@ class _HealthViewState extends State<HealthView> {
   void initState() {
     super.initState();
     _initializeItems();
-    // 延迟执行，确保 context 准备好
+    // Delay execution to ensure context is ready
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _prepareAndRun();
     });
@@ -51,11 +51,11 @@ class _HealthViewState extends State<HealthView> {
     ]);
     _logs
       ..clear()
-      ..add('开始系统健康检查…');
+      ..add(AppLocalizations.of(context)!.healthCheckStart);
     if (mounted) setState(() {});
 
     await _runStep('doctor', () async {
-      _log('执行: brew doctor');
+      _log(AppLocalizations.of(context)!.healthExecuteDoctor);
       final raw = await _brew.doctorRaw();
       final warnings = _parseDoctor(raw);
       final anyWarn = warnings.any((e) => e.status != _Status.ok);
@@ -63,55 +63,55 @@ class _HealthViewState extends State<HealthView> {
       doctor.details = raw;
       doctor.description = anyWarn ? AppLocalizations.of(context)!.healthFoundIssues(warnings.length) : AppLocalizations.of(context)!.healthDoctorDescription;
       doctor.status = anyWarn ? _Status.warn : _Status.ok;
-      _log(anyWarn ? 'brew doctor 提示 ${warnings.length} 条信息（非致命）' : 'brew doctor 通过');
+      _log(anyWarn ? AppLocalizations.of(context)!.healthDoctorWarnings(warnings.length) : AppLocalizations.of(context)!.healthDoctorPassed);
     });
 
     await _runStep('repo', () async {
-      _log('读取 brew 前缀…');
+      _log(AppLocalizations.of(context)!.healthReadPrefix);
       final prefix = await _brew.getBrewPrefix();
       final it = _items.firstWhere((e) => e.key == 'repo');
-      it.description = 'Prefix: $prefix';
+      it.description = AppLocalizations.of(context)!.healthPrefix(prefix);
       it.status = _Status.ok;
-      _log('前缀: $prefix');
+      _log(AppLocalizations.of(context)!.healthPrefix(prefix));
     });
 
     await _runStep('path', () async {
       final prefix = await _brew.getBrewPrefix();
-      _log('检查 PATH 是否包含 $prefix/bin …');
+      _log(AppLocalizations.of(context)!.healthCheckPath(prefix));
       final ok = await _brew.isPathConfigured();
       final it = _items.firstWhere((e) => e.key == 'path');
-      it.description = ok ? 'PATH 中包含 $prefix/bin' : '建议将 $prefix/bin 加入 PATH';
+      it.description = ok ? AppLocalizations.of(context)!.healthPathContains(prefix) : AppLocalizations.of(context)!.healthPathNeedsAdjustment(prefix);
       it.status = ok ? _Status.ok : _Status.warn;
-      it.actionLabel = ok ? null : '查看建议';
-      it.details = '请将如下路径加入到 PATH 中:\nexport PATH="${prefix}/bin:\$PATH"';
-      _log(ok ? 'PATH 检查通过' : 'PATH 需要调整');
+      it.actionLabel = ok ? null : AppLocalizations.of(context)!.healthViewSuggestions;
+      it.details = 'Please add the following path to PATH:\nexport PATH="${prefix}/bin:\$PATH"';
+      _log(ok ? AppLocalizations.of(context)!.healthPathPassed : AppLocalizations.of(context)!.healthPathNeedsFix);
     });
 
     await _runStep('xcode', () async {
-      _log('检查 Xcode 命令行工具…');
+      _log(AppLocalizations.of(context)!.healthCheckXcode);
       final ok = await _brew.isXcodeCLTInstalled();
       final it = _items.firstWhere((e) => e.key == 'xcode');
-      it.description = ok ? AppLocalizations.of(context)!.actionInstalled : '未安装，建议安装 xcode-select --install';
+      it.description = ok ? AppLocalizations.of(context)!.actionInstalled : AppLocalizations.of(context)!.healthXcodeNotInstalled;
       it.status = ok ? _Status.ok : _Status.warn;
-      it.actionLabel = ok ? null : '查看建议';
-      it.details = '在终端执行：xcode-select --install';
-      _log(ok ? 'Xcode CLT ${AppLocalizations.of(context)!.actionInstalled}' : 'Xcode CLT 未安装');
+      it.actionLabel = ok ? null : AppLocalizations.of(context)!.healthViewSuggestions;
+      it.details = 'Execute in terminal: xcode-select --install';
+      _log(ok ? AppLocalizations.of(context)!.healthXcodeCLTPassed : AppLocalizations.of(context)!.healthXcodeCLTNotInstalled);
     });
 
     await _runStep('missing', () async {
-      _log('扫描缺失依赖…');
+      _log(AppLocalizations.of(context)!.healthScanMissingDeps);
       final list = await _brew.listMissingDependencies();
       final it = _items.firstWhere((e) => e.key == 'missing');
       if (list.isEmpty) {
         it.description = AppLocalizations.of(context)!.healthNoMissingDeps;
         it.status = _Status.ok;
-        _log('未发现缺失依赖');
+        _log(AppLocalizations.of(context)!.healthNoMissingDepsFound);
       } else {
-        it.description = '存在 ${list.length} 个缺失依赖';
+        it.description = AppLocalizations.of(context)!.healthMissingDepsFound(list.length);
         it.status = _Status.err;
         it.actionLabel = AppLocalizations.of(context)!.actionViewDetails;
         it.details = list.join('\n');
-        _log('发现缺失依赖 ${list.length} 个');
+        _log(AppLocalizations.of(context)!.healthMissingDepsFoundLog(list.length));
       }
     });
 
@@ -127,7 +127,7 @@ class _HealthViewState extends State<HealthView> {
     } catch (e) {
       it.status = _Status.err;
       it.description = AppLocalizations.of(context)!.healthCheckFailed(e.toString());
-      _log('错误: $e');
+      _log(AppLocalizations.of(context)!.healthError(e.toString()));
     } finally {
       if (mounted) setState(() {});
     }

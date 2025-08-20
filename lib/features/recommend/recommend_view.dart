@@ -9,6 +9,7 @@ import 'package:brew_master/core/widgets/gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:brew_master/l10n/app_localizations.dart';
 
@@ -148,16 +149,16 @@ class _RecommendViewState extends State<RecommendView> {
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Text(_loadError!),
           const SizedBox(height: 12),
-          ElevatedButton(onPressed: () { setState(() { _isLoading = true; _loadError = null; }); _loadAll(); }, child: const Text('重试')),
+          ElevatedButton(onPressed: () { setState(() { _isLoading = true; _loadError = null; }); _loadAll(); }, child: Text(AppLocalizations.of(context)!.commonRetry)),
         ]),
       );
     }
     if (_featured.isEmpty && (_sections.isEmpty || _sections.first.apps.isEmpty)) {
       return Center(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const Text('暂无推荐数据'),
+          Text(AppLocalizations.of(context)!.updatesAllUpToDate),
           const SizedBox(height: 12),
-          ElevatedButton(onPressed: () { setState(() { _isLoading = true; }); _loadAll(); }, child: const Text('刷新')),
+          ElevatedButton(onPressed: () { setState(() { _isLoading = true; }); _loadAll(); }, child: Text(AppLocalizations.of(context)!.commonRefresh)),
         ]),
       );
     }
@@ -270,7 +271,7 @@ class _RecommendViewState extends State<RecommendView> {
       child: Row(children: [
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text('本周精选', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
+            Text(AppLocalizations.of(context)!.labelThisWeekFeatured, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
             const SizedBox(height: 6),
             Text('${app.displayName} · ${app.slogan}', maxLines: 2, overflow: TextOverflow.ellipsis),
             const SizedBox(height: 12),
@@ -349,24 +350,13 @@ class _RecommendViewState extends State<RecommendView> {
 
   Widget _logo(_App app, {double size = 32}) {
     final host = Uri.parse(app.homepage).host;
-    final url = 'https://www.google.com/s2/favicons?sz=${(size * 2).round()}&domain=$host';
     return ClipRRect(
       borderRadius: BorderRadius.circular(size / 6),
       child: Stack(children: [
         SizedBox(
           width: size,
           height: size,
-          child: Image.network(
-            url,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => Container(
-              width: size,
-              height: size,
-              color: Colors.black12,
-              alignment: Alignment.center,
-              child: Icon(Icons.apps, size: size * 0.6, color: Colors.black38),
-            ),
-          ),
+          child: _Favicon(domain: host, size: size),
         ),
         Positioned.fill(
           child: IgnorePointer(
@@ -543,3 +533,99 @@ class _App {
     _ => '实用工具',
   };
 } 
+
+class _Favicon extends StatefulWidget {
+  final String domain;
+  final double size;
+  const _Favicon({required this.domain, required this.size});
+
+  @override
+  State<_Favicon> createState() => _FaviconState();
+}
+
+class _FaviconState extends State<_Favicon> {
+  List<String> _candidates = const <String>[];
+  int _index = 0;
+  ImageStream? _stream;
+  ImageStreamListener? _listener;
+
+  @override
+  void initState() {
+    super.initState();
+    _initCandidates();
+  }
+
+  Future<void> _initCandidates() async {
+    final prefs = await SharedPreferences.getInstance();
+    final cached = prefs.getString('favicon:url:${widget.domain}');
+    final google = 'https://www.google.com/s2/favicons?sz=${(widget.size * 2).round()}&domain=${widget.domain}';
+    final duck = 'https://icons.duckduckgo.com/ip2/${widget.domain}.ico';
+    final list = <String>[
+      if (cached != null && cached.isNotEmpty) cached,
+      google,
+      duck,
+    ];
+    // de-duplicate while keeping order
+    _candidates = list.toSet().toList();
+    if (_index >= _candidates.length) _index = 0;
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void didUpdateWidget(covariant _Favicon oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.domain != widget.domain || oldWidget.size != widget.size) {
+      _index = 0;
+      _initCandidates();
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_stream != null && _listener != null) {
+      _stream!.removeListener(_listener!);
+    }
+    super.dispose();
+  }
+
+  void _onImage(ImageInfo _, bool __) async {
+    // Persist successful url
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('favicon:url:${widget.domain}', _candidates[_index]);
+    } catch (_) {}
+  }
+
+  void _onError(Object _, StackTrace? __) {
+    if (!mounted) return;
+    if (_index < _candidates.length - 1) {
+      setState(() => _index++);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_candidates.isEmpty) {
+      return _placeholder();
+    }
+    final img = Image.network(
+      _candidates[_index],
+      fit: BoxFit.cover,
+    );
+    if (_stream != null && _listener != null) {
+      _stream!.removeListener(_listener!);
+    }
+    _stream = img.image.resolve(const ImageConfiguration());
+    _listener = ImageStreamListener(_onImage, onError: _onError);
+    _stream!.addListener(_listener!);
+    return img;
+  }
+
+  Widget _placeholder() {
+    return Container(
+      color: Colors.black12,
+      alignment: Alignment.center,
+      child: Icon(Icons.apps, size: widget.size * 0.6, color: Colors.black38),
+    );
+  }
+}

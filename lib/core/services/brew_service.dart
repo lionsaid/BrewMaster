@@ -17,8 +17,24 @@ import '../models/service_item.dart';
 /// commands use this confirmed, absolute path, making the service resilient to
 /// inconsistent `PATH` environments and preventing crashes related to process execution.
 class BrewService {
+  // Singleton instance
+  static final BrewService _instance = BrewService._internal();
+  factory BrewService() => _instance;
+  BrewService._internal();
+
   /// Caches the found, valid, absolute path to the `brew` executable.
   String? _brewPath;
+
+  /// Default environment to make brew output stable and parsing-friendly
+  /// Note: Users can still override or extend via Process.run's environment merge when needed.
+  static const Map<String, String> _defaultEnv = {
+    'LC_ALL': 'C',
+    'LANG': 'C',
+  };
+
+  // Testing hooks for injecting mock process behaviors in unit tests
+  static Future<ProcessResult> Function(String exec, List<String> args, {Map<String, String>? environment})? runHook;
+  static Future<Process> Function(String exec, List<String> args, {Map<String, String>? environment})? startHook;
 
   /// Finds and caches a valid `brew` executable path.
   ///
@@ -33,6 +49,20 @@ class BrewService {
 
     print('[BrewService] Searching for a valid brew executable...');
     try {
+      // 0. Try cached path from preferences first
+      try {
+        final sp = await SharedPreferences.getInstance();
+        final cached = sp.getString('brew.cached_path');
+        if (cached != null && cached.isNotEmpty && await File(cached).exists()) {
+          final v = await Process.run(cached, ['--version'], environment: _defaultEnv);
+          if (v.exitCode == 0) {
+            _brewPath = cached;
+            print('[BrewService] Reusing cached brew path: $cached');
+            return true;
+          }
+        }
+      } catch (_) {}
+
       // 1. Check `which brew` first.
       String whichResult = '';
       try {
@@ -61,10 +91,14 @@ class BrewService {
       for (final path in candidates) {
         try {
           if (await File(path).exists()) {
-            final v = await Process.run(path, ['--version']);
+            final v = await Process.run(path, ['--version'], environment: _defaultEnv);
             if (v.exitCode == 0) {
               print('[BrewService] Found valid brew executable at: $path');
               _brewPath = path; // Critical: Store the valid path.
+              try {
+                final sp = await SharedPreferences.getInstance();
+                await sp.setString('brew.cached_path', path);
+              } catch (_) {}
               return true;
             }
           }
@@ -144,7 +178,10 @@ class BrewService {
     }
 
     print('[BrewService] Running command: $_brewPath ${args.join(' ')}');
-    ProcessResult result = await Process.run(_brewPath!, args);
+    // First try with default env to stabilize output
+    ProcessResult result = await (runHook != null
+        ? runHook!(_brewPath!, args, environment: _defaultEnv)
+        : Process.run(_brewPath!, args, environment: _defaultEnv));
 
     // Retry logic for flaky Homebrew API
     bool needsRetry = result.exitCode != 0 &&
@@ -152,8 +189,14 @@ class BrewService {
             result.stdout.toString().contains('Cannot download non-corrupt'));
     if (needsRetry) {
       print('[BrewService] Retrying command with API disabled...');
-      final env = {'HOMEBREW_NO_INSTALL_FROM_API': '1', 'HOMEBREW_NO_GITHUB_API': '1'};
-      result = await Process.run(_brewPath!, args, environment: env);
+      final env = {
+        ..._defaultEnv,
+        'HOMEBREW_NO_INSTALL_FROM_API': '1',
+        'HOMEBREW_NO_GITHUB_API': '1',
+      };
+      result = await (runHook != null
+          ? runHook!(_brewPath!, args, environment: env)
+          : Process.run(_brewPath!, args, environment: env));
     }
 
     if (result.exitCode != 0 && !allowNonZero) {
@@ -172,7 +215,9 @@ class BrewService {
 
     // On macOS, the BSD 'script' command does not support '-c'; using it will output
     // "script: -c: No such file or directory". Start the process directly instead.
-    return await Process.start(_brewPath!, brewArgs);
+    return await (startHook != null
+        ? startHook!(_brewPath!, brewArgs, environment: _defaultEnv)
+        : Process.start(_brewPath!, brewArgs, environment: _defaultEnv));
   }
 
   // =======================================================================
@@ -343,7 +388,7 @@ class BrewService {
     return getPackagesInfo(names);
   }
 
-  // 仅返回搜索到的名称与是否为 cask，用于懒加载详情
+  // Only return searched names and whether they are cask, for lazy loading details
   Future<List<(String name, bool isCask)>> searchNames(String query, {int limit = 40}) async {
     if (query.trim().isEmpty) return [];
     final half = (limit / 2).floor();
@@ -360,7 +405,7 @@ class BrewService {
       final res = await Process.run('bash', ['-lc', 'lsof -nP -iTCP -sTCP:LISTEN | grep -i ${_escape(name)} || true']);
       final lines = res.stdout.toString().split('\n');
       final ports = <int>{};
-      // 仅匹配 ]:PORT 或 非双冒号的 :PORT，避免把 IPv6 ::1 的“1”当作端口
+      // Only match ]:PORT or non-double colon :PORT, avoid treating "1" in IPv6 ::1 as port
       final re = RegExp(r'(?:\]:(\d+)|(?<!:):(\d+))');
       for (final l in lines) {
         for (final m in re.allMatches(l)) {
@@ -737,7 +782,8 @@ class BrewService {
 
   // Return a list of all current taps
   Future<List<String>> listTaps() async {
-    final result = await _runBrewCommand(['tap', '-', '-', 'read'], allowNonZero: true);
+    // `brew tap` prints the list by default; use allowNonZero to avoid hard failures.
+    final result = await _runBrewCommand(['tap'], allowNonZero: true);
     return result.stdout.toString().split('\n').where((l) => l.isNotEmpty).toList();
   }
 
@@ -753,7 +799,7 @@ class BrewService {
     return result.stdout.toString().split('\n').where((l) => l.isNotEmpty).toList();
   }
 
-  // 列出已安装的 formulae 或 casks 以及其版本（快速）
+  // List installed formulae or casks and their versions (fast)
   Future<Map<String, String>> listInstalledVersions({required bool isCask}) async {
     final args = <String>['list', isCask ? '--cask' : '--formulae', '--versions'];
     final result = await _runBrewCommand(args, allowNonZero: true);
@@ -762,7 +808,7 @@ class BrewService {
     for (final raw in lines) {
       final line = raw.trim();
       if (line.isEmpty) continue;
-      // 形如: name v1 v2 ... 取最后一个作为当前版本
+      // Format: name v1 v2 ... take the last one as current version
       final parts = line.split(RegExp(r'\s+'));
       if (parts.isEmpty) continue;
       if (parts.length == 1) {
@@ -774,7 +820,7 @@ class BrewService {
     return map;
   }
 
-  // 批量获取包详情（沿用现有 info 能力）
+  // Batch get package details (reuse existing info capability)
   Future<List<Package>> getPackagesInfoBatch(List<String> names) async {
     return getPackagesInfo(names);
   }

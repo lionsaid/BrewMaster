@@ -59,7 +59,7 @@ class FrostCard extends StatelessWidget {
             border: Border.all(color: Colors.white.withOpacity(0.5)),
             boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 16, offset: const Offset(0, 6))],
           ),
-          child: child, // 移除 Padding，直接使用 child
+          child: child, // Remove Padding, use child directly
         ),
       ),
     );

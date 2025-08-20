@@ -51,13 +51,13 @@ class _ServicesViewState extends State<ServicesView> {
     final messenger = ScaffoldMessenger.of(context);
     try {
       await action();
-      messenger.showSnackBar(SnackBar(content: Text('$name 操作成功')));
+      messenger.showSnackBar(SnackBar(content: Text('${AppLocalizations.of(context)!.servicesProcessing} $name')));
       await _load();
     } catch (e) {
       await showDialog(
         context: context,
         builder: (_) => AlertDialog(
-          title: Text('$name 操作失败'),
+          title: Text('${AppLocalizations.of(context)!.actionLoadFailed}'),
           content: SizedBox(width: 560, child: Text(e.toString())),
           actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(AppLocalizations.of(context)!.actionClose))],
         ),
@@ -184,7 +184,7 @@ class _ServicesViewState extends State<ServicesView> {
                                     ),
                                   ]),
                                   const SizedBox(height: 8),
-                                  // 可展开详情
+                                  // Expandable details
                                   _ServiceDetails(name: s.name, brew: _brew),
                                   const SizedBox(height: 4),
                                   Align(
@@ -321,13 +321,13 @@ class _ServiceDetailsState extends State<_ServiceDetails> {
             padding: const EdgeInsets.only(bottom: 6),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                const Text('端口: '),
-                if (_ports == null) const Text('—') else Expanded(child: Text(_ports!.isEmpty ? '—' : _ports!.join(', '))),
+                Text(AppLocalizations.of(context)!.labelPorts),
+                if (_ports == null) Text(AppLocalizations.of(context)!.labelHome.replaceAll('Home', AppLocalizations.of(context)!.commonNone)) else Expanded(child: Text(_ports!.isEmpty ? AppLocalizations.of(context)!.commonNone : _ports!.join(', '))),
               ]),
               const SizedBox(height: 4),
               Row(children: [
-                const Text('资源: '),
-                Expanded(child: Text(_res == null ? '—' : 'CPU ${_res!.$1.toStringAsFixed(1)}% · MEM ${_res!.$2.toStringAsFixed(1)}%')),
+                Text(AppLocalizations.of(context)!.labelResources),
+                Expanded(child: Text(_res == null ? AppLocalizations.of(context)!.commonNone : 'CPU ${_res!.$1.toStringAsFixed(1)}% · MEM ${_res!.$2.toStringAsFixed(1)}%')),
               ]),
             ]),
           )

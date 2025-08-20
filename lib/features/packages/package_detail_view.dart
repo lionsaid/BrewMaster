@@ -253,7 +253,7 @@ class _PackageDetailViewState extends State<PackageDetailView> with TickerProvid
               if (_versionedAlternatives == null) ...[
                 TextButton(onPressed: _loadAlternatives, child: Text(AppLocalizations.of(context)!.actionLoadAlternatives)),
                 const SizedBox(height: 4),
-                const Text('提示：很多配方没有维护版本化别名，可使用下方“提取并安装”直接指定版本。', style: TextStyle(color: Colors.grey)),
+                Text(AppLocalizations.of(context)!.actionExtractInstallHint, style: const TextStyle(color: Colors.grey)),
               ] else if (_versionedAlternatives!.isEmpty) ...[
                 Text(AppLocalizations.of(context)!.actionNoVersionedFormulae, style: const TextStyle(color: Colors.grey)),
               ] else ...[
@@ -303,7 +303,7 @@ class _PackageDetailViewState extends State<PackageDetailView> with TickerProvid
             ],
           ),
           const SizedBox(height: 6),
-          const Text('原理：brew extract --version=<v> <formula> <tap>，把历史配方提取到本地 tap 后安装。', style: TextStyle(color: Colors.grey, fontSize: 12)),
+          Text(AppLocalizations.of(context)!.textExtractPrinciple, style: const TextStyle(color: Colors.grey, fontSize: 12)),
         ],
       ),
     );

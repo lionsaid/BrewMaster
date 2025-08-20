@@ -1,13 +1,15 @@
 import 'package:brew_master/app/app_theme.dart';
-import 'package:brew_master/features/home/splash_view.dart';
 import 'package:brew_master/core/app_settings.dart';
+import 'package:brew_master/features/home/splash_view.dart';
+import 'package:brew_master/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:brew_master/l10n/app_localizations.dart';
 import 'package:lottie/lottie.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize persisted settings before running app
+  AppSettings.instance.init().then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -49,12 +51,12 @@ class _MyAppState extends State<MyApp> {
              Positioned.fill(
             child: Lottie.asset(
               'assets/image/GradientDotsBackground.json',
-              // 使用 BoxFit.cover 可以确保动画填满屏幕，即使比例不完全匹配
-              // 这样通常可以省去外层的 Center 组件
+              // Using BoxFit.cover ensures the animation fills the screen, even if the aspect ratio doesn't match exactly
+// This usually eliminates the need for an outer Center widget
               fit: BoxFit.cover,
             ),
           ),
-          // subtle tint to keep内容可读
+          // subtle tint to keep content readable
           // Positioned.fill(
           //   child: DecoratedBox(
           //     decoration: BoxDecoration(

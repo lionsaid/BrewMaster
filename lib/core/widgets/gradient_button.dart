@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class GradientButton extends StatelessWidget {
   final String label;
@@ -27,7 +28,7 @@ class GradientButton extends StatelessWidget {
   }
 }
 
-/// 统一的操作按钮组件，确保不同语言下的按钮宽度一致
+/// Unified action button component, ensuring consistent button width across different languages
 class ActionButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Widget child;
@@ -35,7 +36,7 @@ class ActionButton extends StatelessWidget {
   final bool isPrimary;
   final double? minWidth;
   final EdgeInsetsGeometry? padding;
-  final double? height; // 统一高度（默认 36）
+  final double? height; // Unified height (default 36)
 
   const ActionButton({
     super.key,
@@ -50,48 +51,63 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 统一按钮高度
+    // Unified button height
     final double effectiveHeight = height ?? 36.0;
 
-    // 确保按钮文本使用固定的字体样式，不受主题字体变化影响
+    // Ensure button text uses fixed font style, not affected by theme font changes
     final buttonStyle = (style ?? const ButtonStyle()).copyWith(
       textStyle: MaterialStateProperty.all(
         const TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.w500,
-          fontFamily: '.SF Pro Text', // 使用系统默认字体
+          fontFamily: '.SF Pro Text', // Use system default font
         ),
       ),
       minimumSize: MaterialStateProperty.all(Size(minWidth ?? 80, effectiveHeight)),
+      maximumSize: MaterialStateProperty.all(Size(minWidth ?? 80, effectiveHeight)),
       padding: MaterialStateProperty.all(padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
-      // 直接指定 tapTargetSize，适配旧版签名
+      // Directly specify tapTargetSize, adapt to old signature
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      // Prevent text wrapping
+      alignment: Alignment.center,
     );
+
+    // Ensure child is Text when automatically adjusting size to fit button
+    final wrappedChild = child is Text 
+        ? AutoSizeText(
+            (child as Text).data ?? '',
+            style: (child as Text).style,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            minFontSize: 10,
+            maxFontSize: 14,
+            group: AutoSizeGroup(), // Ensure consistent text size for buttons in the same group
+          )
+        : child;
 
     final button = isPrimary
         ? FilledButton(
             onPressed: onPressed,
             style: buttonStyle,
-            child: child,
+            child: wrappedChild,
           )
         : OutlinedButton(
             onPressed: onPressed,
             style: buttonStyle,
-            child: child,
+            child: wrappedChild,
           );
 
     return SizedBox(
       width: minWidth ?? 80,
       height: effectiveHeight,
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
+      child: Center(
         child: button,
       ),
     );
   }
 }
 
-/// 带图标的操作按钮
+/// Action button with icon
 class ActionIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Widget icon;
@@ -100,7 +116,7 @@ class ActionIconButton extends StatelessWidget {
   final bool isPrimary;
   final double? minWidth;
   final EdgeInsetsGeometry? padding;
-  final double? height; // 统一高度（默认 36）
+  final double? height; // Unified height (default 36)
 
   const ActionIconButton({
     super.key,
@@ -116,21 +132,21 @@ class ActionIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 统一按钮高度
+    // Unified button height
     final double effectiveHeight = height ?? 36.0;
 
-    // 确保按钮文本使用固定的字体样式，不受主题字体变化影响
+    // Ensure button text uses fixed font style, not affected by theme font changes
     final buttonStyle = (style ?? const ButtonStyle()).copyWith(
       textStyle: MaterialStateProperty.all(
         const TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.w500,
-          fontFamily: '.SF Pro Text', // 使用系统默认字体
+          fontFamily: '.SF Pro Text', // Use system default font
         ),
       ),
       minimumSize: MaterialStateProperty.all(Size(minWidth ?? 100, effectiveHeight)),
       padding: MaterialStateProperty.all(padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 8)),
-      // 直接指定 tapTargetSize，适配旧版签名
+      // Directly specify tapTargetSize, adapt to old signature
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
 

@@ -714,6 +714,138 @@ abstract class AppLocalizations {
   /// **'Check complete ✅'**
   String get healthCheckComplete;
 
+  /// No description provided for @healthCheckStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting system health check...'**
+  String get healthCheckStart;
+
+  /// No description provided for @healthExecuteDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Execute: brew doctor'**
+  String get healthExecuteDoctor;
+
+  /// No description provided for @healthDoctorPassed.
+  ///
+  /// In en, this message translates to:
+  /// **'brew doctor passed'**
+  String get healthDoctorPassed;
+
+  /// No description provided for @healthDoctorWarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'brew doctor found {count} warnings (non-fatal)'**
+  String healthDoctorWarnings(Object count);
+
+  /// No description provided for @healthReadPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading brew prefix...'**
+  String get healthReadPrefix;
+
+  /// No description provided for @healthPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefix: {prefix}'**
+  String healthPrefix(Object prefix);
+
+  /// No description provided for @healthCheckPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking if PATH contains {prefix}/bin...'**
+  String healthCheckPath(Object prefix);
+
+  /// No description provided for @healthPathContains.
+  ///
+  /// In en, this message translates to:
+  /// **'PATH contains {prefix}/bin'**
+  String healthPathContains(Object prefix);
+
+  /// No description provided for @healthPathNeedsAdjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'Consider adding {prefix}/bin to PATH'**
+  String healthPathNeedsAdjustment(Object prefix);
+
+  /// No description provided for @healthPathPassed.
+  ///
+  /// In en, this message translates to:
+  /// **'PATH check passed'**
+  String get healthPathPassed;
+
+  /// No description provided for @healthPathNeedsFix.
+  ///
+  /// In en, this message translates to:
+  /// **'PATH needs adjustment'**
+  String get healthPathNeedsFix;
+
+  /// No description provided for @healthCheckXcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking Xcode command line tools...'**
+  String get healthCheckXcode;
+
+  /// No description provided for @healthXcodeNotInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Not installed, recommend: xcode-select --install'**
+  String get healthXcodeNotInstalled;
+
+  /// No description provided for @healthXcodeInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed'**
+  String get healthXcodeInstalled;
+
+  /// No description provided for @healthViewSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'View suggestions'**
+  String get healthViewSuggestions;
+
+  /// No description provided for @healthXcodeCLTPassed.
+  ///
+  /// In en, this message translates to:
+  /// **'Xcode CLT installed'**
+  String get healthXcodeCLTPassed;
+
+  /// No description provided for @healthXcodeCLTNotInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Xcode CLT not installed'**
+  String get healthXcodeCLTNotInstalled;
+
+  /// No description provided for @healthScanMissingDeps.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning missing dependencies...'**
+  String get healthScanMissingDeps;
+
+  /// No description provided for @healthNoMissingDepsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No missing dependencies found'**
+  String get healthNoMissingDepsFound;
+
+  /// No description provided for @healthMissingDepsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Found {count} missing dependencies'**
+  String healthMissingDepsFound(Object count);
+
+  /// No description provided for @healthMissingDepsFoundLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Found {count} missing dependencies'**
+  String healthMissingDepsFoundLog(Object count);
+
+  /// No description provided for @healthError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String healthError(Object error);
+
   /// No description provided for @cleanupTitle.
   ///
   /// In en, this message translates to:
@@ -941,6 +1073,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Installed'**
   String get actionInstalled;
+
+  /// No description provided for @splashWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Brew Master'**
+  String get splashWelcome;
+
+  /// No description provided for @splashNoBrew.
+  ///
+  /// In en, this message translates to:
+  /// **'Homebrew is not detected. You can install it or specify the brew path below.'**
+  String get splashNoBrew;
+
+  /// No description provided for @hintBrewPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom brew path (optional)'**
+  String get hintBrewPath;
+
+  /// No description provided for @dashboardHelloUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, {name}'**
+  String dashboardHelloUser(Object name);
+
+  /// No description provided for @packagesSelectedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected {count} packages'**
+  String packagesSelectedCount(Object count);
+
+  /// No description provided for @commonNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get commonNone;
+
+  /// No description provided for @updatesEta.
+  ///
+  /// In en, this message translates to:
+  /// **'ETA {time}'**
+  String updatesEta(Object time);
+
+  /// No description provided for @updatesAlsoUpgrading.
+  ///
+  /// In en, this message translates to:
+  /// **'Also upgrading: {names}'**
+  String updatesAlsoUpgrading(Object names);
+
+  /// No description provided for @commonRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get commonRetry;
+
+  /// No description provided for @commonRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get commonRefresh;
+
+  /// No description provided for @labelThisWeekFeatured.
+  ///
+  /// In en, this message translates to:
+  /// **'This week\'s featured'**
+  String get labelThisWeekFeatured;
+
+  /// No description provided for @settingsPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance mode'**
+  String get settingsPerformance;
+
+  /// No description provided for @tapsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Taps'**
+  String get tapsTitle;
+
+  /// No description provided for @tapsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No taps yet'**
+  String get tapsEmpty;
+
+  /// No description provided for @textExtractPrinciple.
+  ///
+  /// In en, this message translates to:
+  /// **'Extract the bottle from Homebrew\'s Git history and install it manually.'**
+  String get textExtractPrinciple;
+
+  /// No description provided for @depsNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No dependency relationships'**
+  String get depsNone;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

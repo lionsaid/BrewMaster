@@ -89,9 +89,9 @@ class _SplashViewState extends State<SplashView> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('欢迎使用 BrewMaster', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900)),
+                      Text(AppLocalizations.of(context)!.splashWelcome, style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900)),
                       const SizedBox(height: 8),
-                      Text('未检测到 Homebrew。请先${AppLocalizations.of(context)!.actionInstall}后继续，或完成${AppLocalizations.of(context)!.actionInstall}后点击重新检测。', style: Theme.of(context).textTheme.bodyMedium),
+                      Text(AppLocalizations.of(context)!.splashNoBrew, style: Theme.of(context).textTheme.bodyMedium),
                       if (_diagnostic.isNotEmpty) ...[
                         const SizedBox(height: 12),
                         Text(_diagnostic, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8))),
@@ -101,9 +101,9 @@ class _SplashViewState extends State<SplashView> {
                         Expanded(
                           child: TextField(
                             controller: _customPathCtrl,
-                            decoration: const InputDecoration(
-                              hintText: '手动指定 brew 路径（例如 /opt/homebrew/bin/brew）',
-                              prefixIcon: Icon(Icons.link),
+                            decoration: InputDecoration(
+                              hintText: AppLocalizations.of(context)!.hintBrewPath,
+                              prefixIcon: const Icon(Icons.link),
                             ),
                           ),
                         ),

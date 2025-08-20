@@ -80,22 +80,17 @@ class DashboardViewState extends State<DashboardView> {
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
           sliver: SliverToBoxAdapter(
             child: Row(children: [
-              Text('BrewMaster', style: title),
+              Text(AppLocalizations.of(context)!.appTitle, style: title),
               const Spacer(),
-              Text('你好，$_username！', style: title),
+              Text(t.dashboardHelloUser(_username), style: title),
               const SizedBox(width: 12),
-              Flexible(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: ActionButton(
-                    onPressed: _checking ? null : _checkUpdates,
-                    isPrimary: true,
-                    minWidth: 100,
-                    child: _checking
-                        ? Row(children: [const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)), const SizedBox(width: 8), Text(AppLocalizations.of(context)!.updatesChecking)])
-                        : Text(t.actionCheckUpdates),
-                  ),
-                ),
+              ActionButton(
+                onPressed: _checking ? null : _checkUpdates,
+                isPrimary: true,
+                minWidth: 120,
+                child: _checking
+                    ? Row(children: [const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)), const SizedBox(width: 8), Text(AppLocalizations.of(context)!.updatesChecking)])
+                    : Text(t.actionCheckUpdates),
               ),
             ]),
           ),
@@ -111,8 +106,8 @@ class DashboardViewState extends State<DashboardView> {
               mainAxisExtent: 100,
             ),
             delegate: SliverChildListDelegate([
-              InkWell(onTap: () => _goInstalled(context, filter: 'formulae'), child: MetricCard(icon: Icons.science_outlined, label: 'Formulae', value: _formulae?.toString() ?? '…')),
-              InkWell(onTap: () => _goInstalled(context, filter: 'casks'), child: MetricCard(icon: Icons.apps_outlined, label: 'Casks', value: _casks?.toString() ?? '…')),
+              InkWell(onTap: () => _goInstalled(context, filter: 'formulae'), child: MetricCard(icon: Icons.science_outlined, label: t.filterFormulae, value: _formulae?.toString() ?? '…')),
+              InkWell(onTap: () => _goInstalled(context, filter: 'casks'), child: MetricCard(icon: Icons.apps_outlined, label: t.filterCasks, value: _casks?.toString() ?? '…')),
               InkWell(onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const TapsView())), child: MetricCard(icon: Icons.merge_type_outlined, label: 'Taps', value: _taps?.toString() ?? '…')),
             ]),
           ),
@@ -139,16 +134,11 @@ class DashboardViewState extends State<DashboardView> {
                       Text(_outdated == null ? t.dashboardPleaseWait : (_outdated! > 0 ? t.dashboardTapForDetails : '')),
                     ])),
                     const SizedBox(width: 12),
-                    Flexible(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: ActionButton(
-                          onPressed: (_outdated ?? 0) > 0 ? () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HomeView(initialIndex: 4))) : null,
-                          isPrimary: true,
-                          minWidth: 100,
-                          child: Text(t.actionViewUpdates),
-                        ),
-                      ),
+                    ActionButton(
+                      onPressed: (_outdated ?? 0) > 0 ? () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HomeView(initialIndex: 4))) : null,
+                      isPrimary: true,
+                      minWidth: 100,
+                      child: Text(t.actionViewUpdates),
                     ),
                   ]),
                 ),
@@ -164,7 +154,7 @@ class DashboardViewState extends State<DashboardView> {
                     ActionButton(
                       onPressed: widget.onOpenHealth,
                       minWidth: 100,
-                      child: Text((_doctorIssues ?? 0) > 0 ? '查看并修复' : t.actionViewUpdates),
+                      child: Text((_doctorIssues ?? 0) > 0 ? t.actionViewDetails : t.actionViewUpdates),
                     )
                   ]),
                 ),
@@ -180,16 +170,11 @@ class DashboardViewState extends State<DashboardView> {
                       Text(_cleanupSize == null ? t.dashboardCalculating : (_cleanupSize == '0 B' ? t.dashboardNoCleanupNeeded : t.dashboardCanFreeSize(_cleanupSize!))),
                     ])),
                     const SizedBox(width: 12),
-                    Flexible(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: ActionButton(
-                          onPressed: (_cleanupSize != null && _cleanupSize != '0 B') ? () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HomeView(initialIndex: 7))) : null,
-                          isPrimary: true,
-                          minWidth: 100,
-                          child: Text(t.actionCleanNow),
-                        ),
-                      ),
+                    ActionButton(
+                      onPressed: (_cleanupSize != null && _cleanupSize != '0 B') ? () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HomeView(initialIndex: 7))) : null,
+                      isPrimary: true,
+                      minWidth: 100,
+                      child: Text(t.actionCleanNow),
                     ),                  ]),
                 ),
               ),
@@ -223,16 +208,11 @@ class DashboardViewState extends State<DashboardView> {
                           ]),
                         ]),
                       ),
-                      Flexible(
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                                                  child: ActionButton(
-                          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HomeView(initialIndex: 5))),
-                          isPrimary: true,
-                          minWidth: 100,
-                          child: Text(t.actionManageServices),
-                        ),
-                        ),
+                      ActionButton(
+                        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HomeView(initialIndex: 5))),
+                        isPrimary: true,
+                        minWidth: 120,
+                        child: Text(t.actionManageServices),
                       ),
                     ]),
                   ),

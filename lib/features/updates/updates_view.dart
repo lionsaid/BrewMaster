@@ -147,7 +147,8 @@ class _UpdatesViewState extends State<UpdatesView> {
               final remaining = elapsed * (1 / newPct - 1);
               final mins = remaining ~/ 60;
               final secs = (remaining % 60).round();
-              _etaText = '约剩余 ${mins.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+              final mmss = '${mins.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+              _etaText = AppLocalizations.of(context)!.updatesEta(mmss);
             } else {
               _etaText = '';
             }
@@ -160,7 +161,7 @@ class _UpdatesViewState extends State<UpdatesView> {
         setState(() => _lastLine = line);
       });
       if (updatedAlso.isNotEmpty) {
-        setState(() => _extraNote = '同时升级: ${updatedAlso.join(', ')}');
+        setState(() => _extraNote = AppLocalizations.of(context)!.updatesAlsoUpgrading(updatedAlso.join(', ')));
       }
       await _loadOutdated(background: true);
     } finally {
@@ -286,7 +287,7 @@ class _UpdatesViewState extends State<UpdatesView> {
                             trailing: ActionButton(
                         onPressed: busy ? null : () => _upgradeOne(p), 
                         isPrimary: true,
-                        minWidth: 80,
+                        minWidth: 100,
                         child: Text(upgrading ? AppLocalizations.of(context)!.updatesUpgrading : AppLocalizations.of(context)!.updatesUpgrade),
                       ),
                           );

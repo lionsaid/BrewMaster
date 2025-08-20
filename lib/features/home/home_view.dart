@@ -114,7 +114,7 @@ class _HomeViewState extends State<HomeView> {
                           ), NavigationRailDestination(
                             icon: const Icon(Icons.design_services_outlined, color: Colors.blue),
                             selectedIcon: Icon(Icons.design_services, color: brand),
-                            label: const Text('Health'),
+                            label: Text(AppLocalizations.of(context)!.healthTitle),
                           ),
                           NavigationRailDestination(
                             icon: const Icon(Icons.cleaning_services_outlined, color: Colors.blue),

@@ -336,6 +336,88 @@ class AppLocalizationsZh extends AppLocalizations {
   String get healthCheckComplete => '检查完成 ✅';
 
   @override
+  String get healthCheckStart => '开始系统健康检查...';
+
+  @override
+  String get healthExecuteDoctor => '执行: brew doctor';
+
+  @override
+  String get healthDoctorPassed => 'brew doctor 通过';
+
+  @override
+  String healthDoctorWarnings(Object count) {
+    return 'brew doctor 提示 $count 条信息（非致命）';
+  }
+
+  @override
+  String get healthReadPrefix => '读取 brew 前缀...';
+
+  @override
+  String healthPrefix(Object prefix) {
+    return '前缀: $prefix';
+  }
+
+  @override
+  String healthCheckPath(Object prefix) {
+    return '检查 PATH 是否包含 $prefix/bin...';
+  }
+
+  @override
+  String healthPathContains(Object prefix) {
+    return 'PATH 中包含 $prefix/bin';
+  }
+
+  @override
+  String healthPathNeedsAdjustment(Object prefix) {
+    return '建议将 $prefix/bin 加入 PATH';
+  }
+
+  @override
+  String get healthPathPassed => 'PATH 检查通过';
+
+  @override
+  String get healthPathNeedsFix => 'PATH 需要调整';
+
+  @override
+  String get healthCheckXcode => '检查 Xcode 命令行工具...';
+
+  @override
+  String get healthXcodeNotInstalled => '未安装，建议安装 xcode-select --install';
+
+  @override
+  String get healthXcodeInstalled => '已安装';
+
+  @override
+  String get healthViewSuggestions => '查看建议';
+
+  @override
+  String get healthXcodeCLTPassed => 'Xcode CLT 已安装';
+
+  @override
+  String get healthXcodeCLTNotInstalled => 'Xcode CLT 未安装';
+
+  @override
+  String get healthScanMissingDeps => '扫描缺失依赖...';
+
+  @override
+  String get healthNoMissingDepsFound => '未发现缺失依赖';
+
+  @override
+  String healthMissingDepsFound(Object count) {
+    return '存在 $count 个缺失依赖';
+  }
+
+  @override
+  String healthMissingDepsFoundLog(Object count) {
+    return '发现缺失依赖 $count 个';
+  }
+
+  @override
+  String healthError(Object error) {
+    return '错误: $error';
+  }
+
+  @override
   String get cleanupTitle => '系统清理';
 
   @override
@@ -460,6 +542,62 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get actionInstalled => '已安装';
+
+  @override
+  String get splashWelcome => '欢迎使用 Brew Master';
+
+  @override
+  String get splashNoBrew => '未检测到 Homebrew。你可以安装它，或在下方指定 brew 路径。';
+
+  @override
+  String get hintBrewPath => '自定义 brew 路径（可选）';
+
+  @override
+  String dashboardHelloUser(Object name) {
+    return '你好，$name';
+  }
+
+  @override
+  String packagesSelectedCount(Object count) {
+    return '已选择 $count 个软件包';
+  }
+
+  @override
+  String get commonNone => '无';
+
+  @override
+  String updatesEta(Object time) {
+    return '预计剩余 $time';
+  }
+
+  @override
+  String updatesAlsoUpgrading(Object names) {
+    return '同时将升级：$names';
+  }
+
+  @override
+  String get commonRetry => '重试';
+
+  @override
+  String get commonRefresh => '刷新';
+
+  @override
+  String get labelThisWeekFeatured => '本周推荐';
+
+  @override
+  String get settingsPerformance => '性能优先模式';
+
+  @override
+  String get tapsTitle => '仓库 Taps';
+
+  @override
+  String get tapsEmpty => '暂无 Taps';
+
+  @override
+  String get textExtractPrinciple => '从 Homebrew 的历史提交中提取对应版本的二进制并手动安装。';
+
+  @override
+  String get depsNone => '没有依赖或被依赖关系';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -742,6 +880,140 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get healthIntroOk => '您的 Homebrew 環境已通過以下所有檢查。';
 
   @override
+  String get healthDoctorTitle => 'brew doctor 未發現問題';
+
+  @override
+  String get healthDoctorDescription => '所有檢查通過';
+
+  @override
+  String get healthRepoTitle => 'Homebrew 核心倉庫狀態';
+
+  @override
+  String get healthPathTitle => '系統 PATH 配置';
+
+  @override
+  String get healthXcodeTitle => 'Xcode 命令列工具';
+
+  @override
+  String get healthMissingTitle => '缺失依賴';
+
+  @override
+  String get healthChecking => '檢查中…';
+
+  @override
+  String get healthAnalyzing => '分析 brew doctor 輸出…';
+
+  @override
+  String get healthReadingPrefix => '讀取前綴路徑…';
+
+  @override
+  String get healthCheckingPath => '檢查 PATH…';
+
+  @override
+  String get healthCheckingXcode => '檢查安裝狀態…';
+
+  @override
+  String get healthScanningDeps => '掃描缺失依賴…';
+
+  @override
+  String get healthNoMissingDeps => '未發現缺失依賴';
+
+  @override
+  String healthFoundIssues(Object count) {
+    return '發現 $count 個問題';
+  }
+
+  @override
+  String healthCheckFailed(Object error) {
+    return '檢查失敗：$error';
+  }
+
+  @override
+  String get healthCheckComplete => '檢查完成 ✅';
+
+  @override
+  String get healthCheckStart => '開始系統健康檢查...';
+
+  @override
+  String get healthExecuteDoctor => '執行: brew doctor';
+
+  @override
+  String get healthDoctorPassed => 'brew doctor 通過';
+
+  @override
+  String healthDoctorWarnings(Object count) {
+    return 'brew doctor 提示 $count 條資訊（非致命）';
+  }
+
+  @override
+  String get healthReadPrefix => '讀取 brew 前綴...';
+
+  @override
+  String healthPrefix(Object prefix) {
+    return '前綴: $prefix';
+  }
+
+  @override
+  String healthCheckPath(Object prefix) {
+    return '檢查 PATH 是否包含 $prefix/bin...';
+  }
+
+  @override
+  String healthPathContains(Object prefix) {
+    return 'PATH 中包含 $prefix/bin';
+  }
+
+  @override
+  String healthPathNeedsAdjustment(Object prefix) {
+    return '建議將 $prefix/bin 加入 PATH';
+  }
+
+  @override
+  String get healthPathPassed => 'PATH 檢查通過';
+
+  @override
+  String get healthPathNeedsFix => 'PATH 需要調整';
+
+  @override
+  String get healthCheckXcode => '檢查 Xcode 命令列工具...';
+
+  @override
+  String get healthXcodeNotInstalled => '未安裝，建議安裝 xcode-select --install';
+
+  @override
+  String get healthXcodeInstalled => '已安裝';
+
+  @override
+  String get healthViewSuggestions => '查看建議';
+
+  @override
+  String get healthXcodeCLTPassed => 'Xcode CLT 已安裝';
+
+  @override
+  String get healthXcodeCLTNotInstalled => 'Xcode CLT 未安裝';
+
+  @override
+  String get healthScanMissingDeps => '掃描缺失依賴...';
+
+  @override
+  String get healthNoMissingDepsFound => '未發現缺失依賴';
+
+  @override
+  String healthMissingDepsFound(Object count) {
+    return '存在 $count 個缺失依賴';
+  }
+
+  @override
+  String healthMissingDepsFoundLog(Object count) {
+    return '發現缺失依賴 $count 個';
+  }
+
+  @override
+  String healthError(Object error) {
+    return '錯誤: $error';
+  }
+
+  @override
   String get cleanupTitle => '系統清理';
 
   @override
@@ -796,4 +1068,60 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get filterCasks => 'Casks';
+
+  @override
+  String get splashWelcome => '歡迎使用 Brew Master';
+
+  @override
+  String get splashNoBrew => '未檢測到 Homebrew。你可以安裝它，或在下方指定 brew 路徑。';
+
+  @override
+  String get hintBrewPath => '自訂 brew 路徑（可選）';
+
+  @override
+  String dashboardHelloUser(Object name) {
+    return '你好，$name';
+  }
+
+  @override
+  String packagesSelectedCount(Object count) {
+    return '已選擇 $count 個軟體包';
+  }
+
+  @override
+  String get commonNone => '無';
+
+  @override
+  String updatesEta(Object time) {
+    return '預計剩餘 $time';
+  }
+
+  @override
+  String updatesAlsoUpgrading(Object names) {
+    return '同時將升級：$names';
+  }
+
+  @override
+  String get commonRetry => '重試';
+
+  @override
+  String get commonRefresh => '重新整理';
+
+  @override
+  String get labelThisWeekFeatured => '本週精選';
+
+  @override
+  String get settingsPerformance => '效能優先模式';
+
+  @override
+  String get tapsTitle => '倉庫 Taps';
+
+  @override
+  String get tapsEmpty => '暫無 Taps';
+
+  @override
+  String get textExtractPrinciple => '從 Homebrew 的歷史提交中提取對應版本的二進位並手動安裝。';
+
+  @override
+  String get depsNone => '沒有依賴或被依賴關係';
 }

@@ -72,11 +72,11 @@ class _DiscoverViewState extends State<DiscoverView> {
     final code = await _brew.streamInstallPackage(p.name, isCask: p.isCask, onLine: (l) => setState(() => _lastLine[key] = l));
     if (!mounted) return;
     setState(() { _installing[key] = false; });
+    final t = AppLocalizations.of(context)!;
     if (code == 0) {
-      final t = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${t.actionStart} ${p.name}')));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Install ${p.name} failed (code $code)')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${t.actionInstall} ${p.name} failed (code $code)')));
     }
   }
 
@@ -86,6 +86,7 @@ class _DiscoverViewState extends State<DiscoverView> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final t = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -119,7 +120,7 @@ class _DiscoverViewState extends State<DiscoverView> {
                       ),
                       child: TextField(
                         controller: _controller,
-                       decoration: InputDecoration(hintText: '搜索新的 Formulae 或 Casks…'),
+                        decoration: InputDecoration(hintText: t.tabDiscover),
                         onChanged: _onQueryChanged,
                       ),
                     ),
@@ -128,7 +129,7 @@ class _DiscoverViewState extends State<DiscoverView> {
                     const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                   else if (_controller.text.isNotEmpty)
                     IconButton(
-                      tooltip: '清除',
+                      tooltip: t.actionClearSelection,
                       onPressed: () {
                         _controller.clear();
                         _onQueryChanged('');
@@ -169,7 +170,8 @@ class _DiscoverViewState extends State<DiscoverView> {
       return exist;
     }).toList();
     if (merged.isEmpty) {
-      return Center(child: Text('未找到与“${_controller.text.trim()}”相关的结果，请尝试其他关键词。'));
+      final t = AppLocalizations.of(context)!;
+      return Center(child: Text(t.servicesNoResults));
     }
     return ListView.separated(
       itemCount: merged.length,
@@ -193,10 +195,11 @@ class _DiscoverViewState extends State<DiscoverView> {
     final chips = [
       'git', 'node', 'ffmpeg', 'python', 'redis', 'nginx', 'docker', 'iterm2', 'visual-studio-code'
     ];
+    final t = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('热门搜索', style: TextStyle(fontWeight: FontWeight.w700)),
+        Text(t.tabDiscover, style: const TextStyle(fontWeight: FontWeight.w700)),
         const SizedBox(height: 12),
         Wrap(
           spacing: 8,

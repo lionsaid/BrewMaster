@@ -6,7 +6,7 @@ class AppTheme {
     const baseColor = AppColors.background;
     const surface = AppColors.surface;
     const primary = AppColors.primary;
-    const secondary = Color(0xFF7C3AED); // 紫色强调
+    const secondary = Color(0xFF7C3AED); // Purple accent
 
     final colorScheme = ColorScheme.fromSeed(
       seedColor: primary,
@@ -19,7 +19,7 @@ class AppTheme {
 
     return ThemeData(
       colorScheme: colorScheme,
-      // 让外层 builder 提供的背景图可见
+      // Make the background image provided by outer builder visible
       scaffoldBackgroundColor: Colors.transparent,
       useMaterial3: true,
       textTheme: Typography.blackCupertino.apply(
@@ -55,7 +55,7 @@ class AppTheme {
         selectedColor: primary,
       ),
       navigationRailTheme: const NavigationRailThemeData(
-        // 保持侧边栏底色，如需完全透明可改为 Colors.transparent
+        // Keep sidebar background color, change to Colors.transparent if fully transparent is needed
         backgroundColor: baseColor,
         selectedIconTheme: IconThemeData(color: primary),
         selectedLabelTextStyle: TextStyle(color: primary, fontWeight: FontWeight.w600),
@@ -63,7 +63,7 @@ class AppTheme {
         unselectedLabelTextStyle: TextStyle(color: Colors.black54),
         groupAlignment: -0.8,
       ),
-      // Primary CTA: FilledButton (高权重)
+      // Primary CTA: FilledButton (high weight)
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: const Size(64, 44),
@@ -81,7 +81,7 @@ class AppTheme {
           side: const BorderSide(color: Color(0xFFD1D5DB)),
         ),
       ),
-      // Tertiary: Tonal (弱化)
+      // Tertiary: Tonal (weakened)
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFFE5E7EB),

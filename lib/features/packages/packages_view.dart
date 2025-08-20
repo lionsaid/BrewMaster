@@ -3,7 +3,7 @@ import 'package:brew_master/core/services/brew_service.dart';
 import 'package:brew_master/features/packages/package_detail_view.dart';
 import 'package:brew_master/core/widgets/app_card.dart';
 import 'package:brew_master/core/widgets/gradient_button.dart';
-import 'package:brew_master/features/packages/widgets/package_list_item.dart'; // 导入 PackageListItem
+import 'package:brew_master/features/packages/widgets/package_list_item.dart'; // Import PackageListItem
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -29,7 +29,7 @@ class _PackagesViewState extends State<PackagesView> {
   final Set<String> _selectedNames = <String>{};
   DateTime? _lastRefreshedAt;
 
-  int _bgEpoch = 0; // 用于取消旧的后台批次
+  int _bgEpoch = 0; // Used to cancel old background batches
 
   @override
   void initState() {
@@ -44,14 +44,14 @@ class _PackagesViewState extends State<PackagesView> {
     setState(() => _isLoading = true);
     try {
       final currentEpoch = DateTime.now().microsecondsSinceEpoch;
-      // 记录 epoch，用于取消旧的后台批次
+      // Record epoch to cancel old background batches
       _bgEpoch = currentEpoch;
-      // 1) 快速获取已安装 name->version
+              // 1) Quickly get installed name->version
       final formulae = await _brewService.listInstalledVersions(isCask: false);
       final casks = await _brewService.listInstalledVersions(isCask: true);
       final outdatedNames = await _brewService.listOutdatedNames();
 
-      // 先快速渲染基础信息
+              // First quickly render basic information
       final initial = <Package>[];
       for (final e in formulae.entries) {
         initial.add(Package(
@@ -82,7 +82,7 @@ class _PackagesViewState extends State<PackagesView> {
       initial.sort((a,b)=>a.name.compareTo(b.name));
       setState(() { _packages = initial; _isLoading = false; _lastRefreshedAt = DateTime.now(); });
 
-      // 2) 后台补全详情（分批，避免卡顿）
+              // 2) Background complete details (batch, avoid lag)
       final allNames = initial.map((e)=>e.name).toList();
       const batchSize = 15;
       for (var i = 0; i < allNames.length; i += batchSize) {
@@ -108,7 +108,7 @@ class _PackagesViewState extends State<PackagesView> {
               }
             }
           });
-        } catch (_) { /* 忽略单批失败，继续 */ }
+        } catch (_) { /* Ignore single batch failure, continue */ }
       }
     } on BrewCommandException catch (e) {
       // ignore: avoid_print
@@ -162,7 +162,7 @@ class _PackagesViewState extends State<PackagesView> {
     if (confirmed != true) return;
     setState(() => _isLoading = true);
     try {
-      // 执行卸载（串行）
+      // Execute uninstall (serial)
       for (final name in _selectedNames) {
         final p = _packages.firstWhere((e) => e.name == name);
         await _brewService.uninstallPackage(p.name, isCask: p.isCask);
@@ -195,7 +195,7 @@ class _PackagesViewState extends State<PackagesView> {
 
     final listPane = FrostCard(
       child: Padding(
-        padding: const EdgeInsets.all(16.0), // 添加 Padding
+        padding: const EdgeInsets.all(16.0), // Add Padding
         child: Column(
           children: [
             Row(
@@ -240,7 +240,7 @@ class _PackagesViewState extends State<PackagesView> {
             if (_selectedNames.isNotEmpty)
               Row(
                 children: [
-                  Text('已选中 ${_selectedNames.length} 个'),
+                  Text(t.packagesSelectedCount(_selectedNames.length)),
                   const SizedBox(width: 8),
                   ActionButton(
                     onPressed: _bulkUninstall, 
@@ -266,7 +266,7 @@ class _PackagesViewState extends State<PackagesView> {
                     selected: checked,
                     onToggleSelected: () {
                       setState(() {
-                        // 如果当前选中项与点击项不同，则更新选中项并清空批量选择
+                        // If current selected item is different from clicked item, update selected item and clear batch selection
                         if (_selectedPackage?.name != package.name) {
                           _selectedPackage = package;
                           _selectedNames.clear(); // 清空批量选择，避免混淆
@@ -370,7 +370,7 @@ class _PackagesViewState extends State<PackagesView> {
               const SizedBox(width: 12),
               Text(t.statusLastRefresh(last)),
               const Spacer(),
-              if (_selectedNames.isNotEmpty) Text('选中：${_selectedNames.length}')
+              if (_selectedNames.isNotEmpty) Text(t.packagesSelectedCount(_selectedNames.length))
             ],
           ),
         ],

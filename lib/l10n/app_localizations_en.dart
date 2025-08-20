@@ -336,6 +336,88 @@ class AppLocalizationsEn extends AppLocalizations {
   String get healthCheckComplete => 'Check complete ✅';
 
   @override
+  String get healthCheckStart => 'Starting system health check...';
+
+  @override
+  String get healthExecuteDoctor => 'Execute: brew doctor';
+
+  @override
+  String get healthDoctorPassed => 'brew doctor passed';
+
+  @override
+  String healthDoctorWarnings(Object count) {
+    return 'brew doctor found $count warnings (non-fatal)';
+  }
+
+  @override
+  String get healthReadPrefix => 'Reading brew prefix...';
+
+  @override
+  String healthPrefix(Object prefix) {
+    return 'Prefix: $prefix';
+  }
+
+  @override
+  String healthCheckPath(Object prefix) {
+    return 'Checking if PATH contains $prefix/bin...';
+  }
+
+  @override
+  String healthPathContains(Object prefix) {
+    return 'PATH contains $prefix/bin';
+  }
+
+  @override
+  String healthPathNeedsAdjustment(Object prefix) {
+    return 'Consider adding $prefix/bin to PATH';
+  }
+
+  @override
+  String get healthPathPassed => 'PATH check passed';
+
+  @override
+  String get healthPathNeedsFix => 'PATH needs adjustment';
+
+  @override
+  String get healthCheckXcode => 'Checking Xcode command line tools...';
+
+  @override
+  String get healthXcodeNotInstalled => 'Not installed, recommend: xcode-select --install';
+
+  @override
+  String get healthXcodeInstalled => 'Installed';
+
+  @override
+  String get healthViewSuggestions => 'View suggestions';
+
+  @override
+  String get healthXcodeCLTPassed => 'Xcode CLT installed';
+
+  @override
+  String get healthXcodeCLTNotInstalled => 'Xcode CLT not installed';
+
+  @override
+  String get healthScanMissingDeps => 'Scanning missing dependencies...';
+
+  @override
+  String get healthNoMissingDepsFound => 'No missing dependencies found';
+
+  @override
+  String healthMissingDepsFound(Object count) {
+    return 'Found $count missing dependencies';
+  }
+
+  @override
+  String healthMissingDepsFoundLog(Object count) {
+    return 'Found $count missing dependencies';
+  }
+
+  @override
+  String healthError(Object error) {
+    return 'Error: $error';
+  }
+
+  @override
   String get cleanupTitle => 'System cleanup';
 
   @override
@@ -460,4 +542,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get actionInstalled => 'Installed';
+
+  @override
+  String get splashWelcome => 'Welcome to Brew Master';
+
+  @override
+  String get splashNoBrew => 'Homebrew is not detected. You can install it or specify the brew path below.';
+
+  @override
+  String get hintBrewPath => 'Custom brew path (optional)';
+
+  @override
+  String dashboardHelloUser(Object name) {
+    return 'Hello, $name';
+  }
+
+  @override
+  String packagesSelectedCount(Object count) {
+    return 'Selected $count packages';
+  }
+
+  @override
+  String get commonNone => 'None';
+
+  @override
+  String updatesEta(Object time) {
+    return 'ETA $time';
+  }
+
+  @override
+  String updatesAlsoUpgrading(Object names) {
+    return 'Also upgrading: $names';
+  }
+
+  @override
+  String get commonRetry => 'Retry';
+
+  @override
+  String get commonRefresh => 'Refresh';
+
+  @override
+  String get labelThisWeekFeatured => 'This week\'s featured';
+
+  @override
+  String get settingsPerformance => 'Performance mode';
+
+  @override
+  String get tapsTitle => 'Taps';
+
+  @override
+  String get tapsEmpty => 'No taps yet';
+
+  @override
+  String get textExtractPrinciple => 'Extract the bottle from Homebrew\'s Git history and install it manually.';
+
+  @override
+  String get depsNone => 'No dependency relationships';
 }
